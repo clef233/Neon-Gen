@@ -12,6 +12,8 @@ https://neon-gen-ajmybve5pc69dvcnt8arvg.streamlit.app/
 - 🎯 保持原始数据的统计特性
 - 🖥️ 友好的 Web 界面，基于 Streamlit 开发
 - 📈 实时数据预览和下载功能
+- 🤤伟大先进的条件对抗生成网络🤤
+- P   C   R 扩增（确信）
 
 ## 模型参数说明
 
