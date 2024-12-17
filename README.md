@@ -3,16 +3,16 @@
 # Neon-Gen 问卷数据生成器
 
 这是一个基于 CTGAN（Conditional Tabular GAN，条件对抗生成网络）的问卷数据生成工具
-提供*在线演示*😝
+提供*在线演示*
 https://neon-gen-ajmybve5pc69dvcnt8arvg.streamlit.app/
 
 ## 功能特点
 
 - 📊 支持多种数据类型的处理（数值型、分类型）
-- 🎯 保持原始数据的统计特性
+- 🎯 保持原始数据的统计特性（大概）
 - 🖥️ 友好的 Web 界面，基于 Streamlit 开发
 - 📈 实时数据预览和下载功能
-- 🤤伟大先进的条件对抗生成网络🤤
+- 🤤 基于条件对抗生成网络🤤
 - P   C   R 扩增（确信）
 
 ## 模型参数说明
@@ -36,7 +36,7 @@ https://neon-gen-ajmybve5pc69dvcnt8arvg.streamlit.app/
    - 建议移除敏感信息
 
 2. 上传数据
-    - 点点按钮🥰
+    - 点点按钮
     
 3. 设置参数
    - 选择非数值列
@@ -54,30 +54,5 @@ https://neon-gen-ajmybve5pc69dvcnt8arvg.streamlit.app/
 - Python 3.9
 - 依赖库见 `requirements.txt`
 
-### 安装步骤
-1. 克隆仓库
-   ```bash
-   git clone [repository-url]
-   ```
 
-2. 安装依赖
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. 运行应用
-   ```bash
-   streamlit run app.py
-   ```
-
-## 注意事项
-- 大扩增时代降临！😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸😸
-- 社会学的想象力😼😼😼😼😼😼😼😼😼
-
-
-
-
-## 联系方式
-
-如有问题，发发issue盖伦发发
 
