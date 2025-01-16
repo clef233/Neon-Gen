@@ -6,6 +6,12 @@
 提供*在线演示*
 https://neon-gen-ajmybve5pc69dvcnt8arvg.streamlit.app/
 
+## 原论文：
+Modeling Tabular data using Conditional GAN 	
+arXiv:1907.00503 [cs.LG] 
+https://doi.org/10.48550/arXiv.1907.00503
+NeurIPS 2019
+
 ## 功能特点
 
 - 📊 支持多种数据类型的处理（数值型、分类型）
