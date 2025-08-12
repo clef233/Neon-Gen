@@ -2,7 +2,7 @@
 
 # Neon-Gen 问卷数据生成器
 
-这是一个基于 CTGAN（Conditional Tabular GAN，条件对抗生成网络）的问卷数据生成工具
+这是一个基于 CTGAN（Conditional Tabular GAN，条件表格生成对抗网络）的问卷数据生成工具
 提供*在线演示*
 https://neon-gen-ajmybve5pc69dvcnt8arvg.streamlit.app/
 
