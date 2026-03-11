@@ -1,113 +1,133 @@
 import pandas as pd
 import numpy as np
 from ctgan import CTGAN
-from sklearn.preprocessing import LabelEncoder
 import warnings
 warnings.filterwarnings('ignore')
+
 
 class DataGenerator:
     def __init__(self):
         self.model = None
-        self.label_encoders = {}
         self.categorical_columns = []
         self.numerical_columns = []
+        self.integer_columns = []
         self.original_data = None
-        
+        self.column_ranges = {}
+
     def prepare_data(self, df, categorical_columns=None):
         """准备训练数据"""
         if categorical_columns is None:
             categorical_columns = []
-        
-        # 保存原始数据用于评估
+
         self.original_data = df.copy()
-        
-        # 存储列信息
-        self.categorical_columns = categorical_columns
-        self.numerical_columns = [col for col in df.columns if col not in categorical_columns]
-        
-        # 对分类变量进行编码
+        self.categorical_columns = list(categorical_columns)
+        self.numerical_columns = [col for col in df.columns if col not in self.categorical_columns]
+
         df_processed = df.copy()
-        for column in categorical_columns:
-            le = LabelEncoder()
-            df_processed[column] = le.fit_transform(df_processed[column].astype(str))
-            self.label_encoders[column] = le
-            
+
+        # 分类列：填充缺失值，统一转字符串
+        for col in self.categorical_columns:
+            df_processed[col] = df_processed[col].fillna("缺失").astype(str)
+
+        # 数值列：检测哪些是整数列，记录范围
+        self.integer_columns = []
+        self.column_ranges = {}
+        for col in self.numerical_columns:
+            non_null = df_processed[col].dropna()
+            if len(non_null) > 0 and non_null.apply(lambda x: float(x).is_integer()).all():
+                self.integer_columns.append(col)
+            self.column_ranges[col] = {
+                'min': df_processed[col].min(),
+                'max': df_processed[col].max(),
+            }
+
         return df_processed
-    
-    def train(self, df, epochs=500, batch_size=10,pac=2):
+
+    def train(self, df, epochs=500, batch_size=100, pac=10):
         """训练模型"""
+        # 参数校验
+        if batch_size % 2 != 0:
+            raise ValueError("batch_size 必须为偶数")
+        if batch_size % pac != 0:
+            raise ValueError(f"batch_size ({batch_size}) 必须能被 pac ({pac}) 整除")
+
         try:
             self.model = CTGAN(
                 epochs=epochs,
                 batch_size=batch_size,
                 pac=pac,
-                verbose=True
+                verbose=True,
             )
-            
-            self.model.fit(
-                df,
-                discrete_columns=self.categorical_columns
-            )
+            # CTGAN 直接接受原始分类列，不需要手动编码
+            self.model.fit(df, discrete_columns=self.categorical_columns)
             return True
         except Exception as e:
             print(f"训练错误: {str(e)}")
             return False
-    
+
     def generate(self, n_samples):
         """生成新数据"""
         try:
             if self.model is None:
                 raise Exception("请先训练模型")
-                
-            # 生成样本
+
             synthetic_data = self.model.sample(n_samples)
-            
-            # 将分类变量转换回原始标签
-            for column in self.categorical_columns:
-                le = self.label_encoders[column]
-                synthetic_data[column] = le.inverse_transform(synthetic_data[column].astype(int))
-                
-            # 对数值列进行四舍五入
-            for column in self.numerical_columns:
-                synthetic_data[column] = synthetic_data[column].round(2)
-                
+
+            # 数值列后处理
+            for col in self.numerical_columns:
+                col_min = self.column_ranges[col]['min']
+                col_max = self.column_ranges[col]['max']
+                # 先 clip 到原始范围
+                synthetic_data[col] = synthetic_data[col].clip(col_min, col_max)
+                # 整数列转整数，其余保留两位小数
+                if col in self.integer_columns:
+                    synthetic_data[col] = synthetic_data[col].round(0).astype(int)
+                else:
+                    synthetic_data[col] = synthetic_data[col].round(2)
+
             return synthetic_data
-            
+
         except Exception as e:
             print(f"生成错误: {str(e)}")
             return None
-            
-    def get_column_stats(self, df, column):
-        """获取列的基本统计信息"""
-        stats = {}
-        if column in self.numerical_columns:
-            stats['mean'] = df[column].mean()
-            stats['std'] = df[column].std()
-            stats['min'] = df[column].min()
-            stats['max'] = df[column].max()
-        else:
-            value_counts = df[column].value_counts(normalize=True)
-            stats['distribution'] = value_counts.to_dict()
-        return stats
 
     def evaluate(self, synthetic_data):
-        """简单评估生成的数据"""
-        evaluation = {}
-        
-        # 对每一列进行评估
-        for column in self.original_data.columns:
-            original_stats = self.get_column_stats(self.original_data, column)
-            synthetic_stats = self.get_column_stats(synthetic_data, column)
-            
-            if column in self.numerical_columns:
-                evaluation[column] = {
-                    'original': original_stats,
-                    'synthetic': synthetic_stats
+        """评估生成数据与原始数据的差异"""
+        results = {}
+
+        for col in self.original_data.columns:
+            if col in self.numerical_columns:
+                orig = self.original_data[col].dropna()
+                syn = synthetic_data[col].dropna()
+                results[col] = {
+                    'type': 'numerical',
+                    'original_mean': orig.mean(),
+                    'synthetic_mean': syn.mean(),
+                    'mean_diff': abs(orig.mean() - syn.mean()),
+                    'original_std': orig.std(),
+                    'synthetic_std': syn.std(),
+                    'std_diff': abs(orig.std() - syn.std()),
+                    'original_min': orig.min(),
+                    'synthetic_min': syn.min(),
+                    'original_max': orig.max(),
+                    'synthetic_max': syn.max(),
                 }
             else:
-                evaluation[column] = {
-                    'original_distribution': original_stats['distribution'],
-                    'synthetic_distribution': synthetic_stats['distribution']
+                orig_dist = self.original_data[col].value_counts(normalize=True)
+                syn_dist = synthetic_data[col].value_counts(normalize=True)
+                all_cats = set(orig_dist.index) | set(syn_dist.index)
+                tvd = 0.5 * sum(
+                    abs(orig_dist.get(c, 0) - syn_dist.get(c, 0)) for c in all_cats
+                )
+                results[col] = {
+                    'type': 'categorical',
+                    'original_distribution': orig_dist.to_dict(),
+                    'synthetic_distribution': syn_dist.to_dict(),
+                    'tvd': tvd,
                 }
-                
-        return evaluation
+
+        # 重复行检查
+        merged = pd.merge(self.original_data, synthetic_data, how='inner')
+        results['_duplicate_rows'] = len(merged)
+
+        return results
