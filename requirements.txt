@@ -1,7 +1,10 @@
-streamlit
-pandas
-numpy
-ctgan
-plotly
-openpyxl
-scikit-learn
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.8.0+cpu ; sys_platform == "linux" and platform_machine == "x86_64"
+tabpfn==10.2.0
+streamlit==1.67.0
+pandas==2.2.3
+numpy==2.3.5
+ctgan==0.13.0
+plotly==7.2.0
+openpyxl==3.1.5
+scikit-learn==1.8.0

@@ -2,7 +2,7 @@
 
 # Neon-Gen 问卷数据生成器
 
-这是一个基于 CTGAN（Conditional Tabular GAN，条件表格生成对抗网络）的问卷数据生成工具
+本项目用于合成问卷数据。此实验分支保留默认后端 CTGAN，并提供 CPU 本地推理的 TabPFN 3.5 Fast 和 3.5 标准版。
 提供*在线演示*
 https://neon-gen-ajmybve5pc69dvcnt8arvg.streamlit.app/
 
@@ -59,8 +59,10 @@ NeurIPS 2019
 ## 部署要求
 
 ### 环境要求
-- Python 3.9
-- 依赖库见 `requirements.txt`
+- 在 Streamlit Community Cloud 的 Advanced settings 选择 Python 3.12，入口为 `app.py`。Linux x86-64 使用 `requirements.txt` 中固定的 CPU 版 PyTorch。
+- 首次使用 3.5，请先在 [Prior Labs](https://ux.priorlabs.ai) 接受模型许可，再将 `TABPFN_TOKEN` 配置为部署环境变量或 Streamlit 的顶层 secret。已获授权的离线部署也可把原名权重放在 `TABPFN_MODEL_CACHE_DIR` 指定的目录。
+- 后端按文件列顺序生成。首列从经验分布抽取，后续列根据已生成的答案预测并抽样。数值列按分位数分箱，再从选中箱内抽取观察值。分类列保留选项，缺失值可被抽中。
+- CPU 默认取最多 512 行作为模型上下文，每批预测 128 行。基准结果、数据来源和复现命令见 [GSS 问卷合成实验](benchmarks/README.md)。
   
 
 

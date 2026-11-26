@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-from ctgan import CTGAN
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -43,7 +42,7 @@ class DataGenerator:
 
         return df_processed
 
-    def train(self, df, epochs=500, batch_size=100, pac=10):
+    def train(self, df, epochs=500, batch_size=100, pac=10, seed=None):
         """训练模型"""
         # 参数校验
         if batch_size % 2 != 0:
@@ -52,12 +51,16 @@ class DataGenerator:
             raise ValueError(f"batch_size ({batch_size}) 必须能被 pac ({pac}) 整除")
 
         try:
+            from ctgan import CTGAN
+
             self.model = CTGAN(
                 epochs=epochs,
                 batch_size=batch_size,
                 pac=pac,
                 verbose=True,
             )
+            if seed is not None:
+                self.model.set_random_state(seed)
             # CTGAN 直接接受原始分类列，不需要手动编码
             self.model.fit(df, discrete_columns=self.categorical_columns)
             return True
@@ -127,7 +130,13 @@ class DataGenerator:
                 }
 
         # 重复行检查
-        merged = pd.merge(self.original_data, synthetic_data, how='inner')
-        results['_duplicate_rows'] = len(merged)
+        reference = self.original_data.copy()
+        candidate = synthetic_data.copy()
+        for col in self.categorical_columns:
+            reference[col] = reference[col].astype("string")
+            candidate[col] = candidate[col].astype("string")
+        results['_duplicate_rows'] = int(pd.MultiIndex.from_frame(candidate).isin(
+            pd.MultiIndex.from_frame(reference)
+        ).sum())
 
         return results
