@@ -2,44 +2,80 @@
   {
     "method": "tabpfn-v3.5-fast",
     "seed": 17,
-    "status": "error",
-    "error_type": "TabPFNLicenseError",
-    "error": "TabPFN requires a one-time license acceptance to download model weights\nfor local inference. Your datasets stay local and are never sent to Prior\nLabs, and TabPFN works offline once the weights are downloaded.\n\nBrowser login is disabled (TABPFN_NO_BROWSER is set).\n\nSet the TABPFN_TOKEN environment variable with a valid API key\nobtained from https://ux.priorlabs.ai"
+    "marginal_tv": 0.060546875,
+    "pair_tv": 0.14973958333333334,
+    "religion_denom_tv": 0.125,
+    "tstr_auc": 0.5691459801700911,
+    "real_train_auc": 0.6462120428178859,
+    "train_match": 0.0,
+    "status": "ok",
+    "seconds": 45.094969354,
+    "peak_mib": 2263.9140625
   },
   {
     "method": "tabpfn-v3.5-fast",
     "seed": 29,
-    "status": "error",
-    "error_type": "TabPFNLicenseError",
-    "error": "TabPFN requires a one-time license acceptance to download model weights\nfor local inference. Your datasets stay local and are never sent to Prior\nLabs, and TabPFN works offline once the weights are downloaded.\n\nBrowser login is disabled (TABPFN_NO_BROWSER is set).\n\nSet the TABPFN_TOKEN environment variable with a valid API key\nobtained from https://ux.priorlabs.ai"
+    "marginal_tv": 0.07042100694444445,
+    "pair_tv": 0.15494791666666666,
+    "religion_denom_tv": 0.14453125,
+    "tstr_auc": 0.6319406826869514,
+    "real_train_auc": 0.6428052786261742,
+    "train_match": 0.00390625,
+    "status": "ok",
+    "seconds": 43.87365664499998,
+    "peak_mib": 2162.6953125
   },
   {
     "method": "tabpfn-v3.5-fast",
     "seed": 43,
-    "status": "error",
-    "error_type": "TabPFNLicenseError",
-    "error": "TabPFN requires a one-time license acceptance to download model weights\nfor local inference. Your datasets stay local and are never sent to Prior\nLabs, and TabPFN works offline once the weights are downloaded.\n\nBrowser login is disabled (TABPFN_NO_BROWSER is set).\n\nSet the TABPFN_TOKEN environment variable with a valid API key\nobtained from https://ux.priorlabs.ai"
+    "marginal_tv": 0.06586371527777778,
+    "pair_tv": 0.1515842013888889,
+    "religion_denom_tv": 0.150390625,
+    "tstr_auc": 0.5466664112926395,
+    "real_train_auc": 0.6313841910708471,
+    "train_match": 0.0,
+    "status": "ok",
+    "seconds": 44.695883386000105,
+    "peak_mib": 2127.32421875
   },
   {
     "method": "tabpfn-v3.5",
     "seed": 17,
-    "status": "error",
-    "error_type": "TabPFNLicenseError",
-    "error": "TabPFN requires a one-time license acceptance to download model weights\nfor local inference. Your datasets stay local and are never sent to Prior\nLabs, and TabPFN works offline once the weights are downloaded.\n\nBrowser login is disabled (TABPFN_NO_BROWSER is set).\n\nSet the TABPFN_TOKEN environment variable with a valid API key\nobtained from https://ux.priorlabs.ai"
+    "marginal_tv": 0.05848524305555555,
+    "pair_tv": 0.151123046875,
+    "religion_denom_tv": 0.1435546875,
+    "tstr_auc": 0.5818472399480299,
+    "real_train_auc": 0.6462120428178859,
+    "train_match": 0.0,
+    "status": "ok",
+    "seconds": 113.562530036,
+    "peak_mib": 4141.58203125
   },
   {
     "method": "tabpfn-v3.5",
     "seed": 29,
-    "status": "error",
-    "error_type": "TabPFNLicenseError",
-    "error": "TabPFN requires a one-time license acceptance to download model weights\nfor local inference. Your datasets stay local and are never sent to Prior\nLabs, and TabPFN works offline once the weights are downloaded.\n\nBrowser login is disabled (TABPFN_NO_BROWSER is set).\n\nSet the TABPFN_TOKEN environment variable with a valid API key\nobtained from https://ux.priorlabs.ai"
+    "marginal_tv": 0.0693359375,
+    "pair_tv": 0.1583930121527778,
+    "religion_denom_tv": 0.1240234375,
+    "tstr_auc": 0.6371347893735954,
+    "real_train_auc": 0.6428052786261742,
+    "train_match": 0.001953125,
+    "status": "ok",
+    "seconds": 112.02399130499998,
+    "peak_mib": 4067.359375
   },
   {
     "method": "tabpfn-v3.5",
     "seed": 43,
-    "status": "error",
-    "error_type": "TabPFNLicenseError",
-    "error": "TabPFN requires a one-time license acceptance to download model weights\nfor local inference. Your datasets stay local and are never sent to Prior\nLabs, and TabPFN works offline once the weights are downloaded.\n\nBrowser login is disabled (TABPFN_NO_BROWSER is set).\n\nSet the TABPFN_TOKEN environment variable with a valid API key\nobtained from https://ux.priorlabs.ai"
+    "marginal_tv": 0.06315104166666667,
+    "pair_tv": 0.1554633246527778,
+    "religion_denom_tv": 0.125,
+    "tstr_auc": 0.5265403842102239,
+    "real_train_auc": 0.6313841910708471,
+    "train_match": 0.0,
+    "status": "ok",
+    "seconds": 107.36149373400008,
+    "peak_mib": 4235.3515625
   },
   {
     "method": "tabpfn-v2",

@@ -20,7 +20,12 @@
 
 ## 复现
 
-在仓库根目录运行。首次使用新版需先在 Prior Labs 接受许可并配置 `TABPFN_TOKEN`，或将已获授权的权重按原文件名放在 `TABPFN_MODEL_CACHE_DIR` 中。
+本次实测在接受许可后，从 [Prior Labs 的 Hugging Face 仓库](https://huggingface.co/Prior-Labs/tabpfn_3_5/tree/main) 下载了下列权重。SHA-256 与仓库记录一致。保留文件名，放入 Linux 默认目录 `~/.cache/tabpfn/` 或 `TABPFN_MODEL_CACHE_DIR` 指定的目录后，在项目根目录执行测试。
+
+| 权重文件 | 字节数 | SHA-256 |
+|---|---:|---|
+| `tabpfn-v3.5-fast-20260909.safetensors` | 334181708 | `14e0b81285bca7a6d1ef121169f27f651f76dff49cad6c0b8779d5c836018550` |
+| `tabpfn-v3.5-20260909.safetensors` | 876027932 | `ece4d67eadfea42eb0e610df5189bea60cb7f31073d81e9c7a019b76eacf0be3` |
 
 ```bash
 python -m pip install -r requirements.txt
@@ -36,16 +41,18 @@ python benchmarks/survey.py --output benchmark-results.json
 
 | 方法 | 边际 TV ↓ | 双变量 TV ↓ | 宗教 × 教派 TV ↓ | 是否已婚 AUC ↑ | 原行重合率 | 平均耗时（秒） | 峰值 RSS（MiB） |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| TabPFN 3.5 Fast | 权重待授权 | — | — | — | — | — | — |
-| TabPFN 3.5 | 权重待授权 | — | — | — | — | — | — |
+| TabPFN 3.5 Fast | 0.0656 | 0.1521 | 0.1400 | 0.5826 | 0.13% | 44.5548 | 2264 |
+| TabPFN 3.5 | 0.0637 | 0.1550 | 0.1309 | 0.5818 | 0.07% | 110.9827 | 4235 |
 | TabPFN v2 | 0.0651 | 0.1556 | 0.1156 | 0.5912 | 0.00% | 33.3078 | 639 |
 | 项目 CTGAN | 0.1412 | 0.2621 | 0.4733 | 0.5582 | 0.00% | 65.4989 | 421 |
 | 逐列 CART | 0.0650 | 0.1561 | 0.1224 | 0.6065 | 0.13% | 0.7592 | 157 |
 | 逐列独立抽样 | 0.0624 | 0.1824 | 0.5312 | 0.4885 | 0.00% | 0.0009 | 95 |
 | 整行重抽样 | 0.0670 | 0.1639 | 0.1396 | 0.6213 | 100.00% | 0.0004 | 95 |
 
-同一套逐列合成方法用 v2 公开权重跑通了三个划分。v2 比默认 CTGAN 更能保留变量间的关系；与逐列 CART 的双变量 TV 接近，预测婚姻的平均 AUC 略低。整行重抽样会直接复制受访者，所以单独保留其重合率作为对照。
+在这份 GSS 样本上，3.5 Fast 的平均双变量 TV 为 0.1521，标准版为 0.1550，CART 为 0.1561，三者均优于 CTGAN 的 0.2621。在合成问卷上训练、真实问卷上预测婚姻状况时，CART 的 AUC 为 0.6065，高于两个 3.5 版本。整行重抽样的 AUC 更高，但生成记录全部复制自训练集。三个随机划分仅报告描述性比较。
 
-3.5 标准版和 Fast 各尝试三个划分，均在首次加载时收到官方 SDK 的 TabPFNLicenseError。等待已授权权重后复跑，才能判断 3.5 的质量、时延和内存。全新 Python 3.12 环境通过依赖检查；网页上传、选后端、生成与导出按钮已覆盖。3.5 的成功界面测试使用无需条件推理的常量前缀，真实权重缺失时另行验证页面会报错。Streamlit Community Cloud 尚未实机部署。
+免费 CPU 部署优先考虑逐列 CART。Fast 生成 512 行平均约 45 秒，峰值 2.21 GiB；标准版平均约 111 秒，峰值 4.14 GiB。Streamlit Community Cloud 文档列出的内存上限为 2.7 GB。标准版在此设置下已超过该值，Fast 的数字仅包括基准进程，实际应用还需要容纳页面和用户会话。[Streamlit 资源说明](https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app)
 
-[逐次数据和错误记录](results.json) · [TabPFN 官方实现](https://github.com/PriorLabs/TabPFN) · [TabPFN-4 预告及候补状态](https://priorlabs.ai/technical-reports/tabpfn-4-preview)
+两个 3.5 版本各完成三个随机划分。另在本地用 Streamlit AppTest 上传含变化数值列和分类列的 CSV，通过两个版本的真实权重完成生成，并验证生成后有下载按钮。未在 Streamlit Community Cloud 实机部署。
+
+[逐次实验结果](results.json) · [TabPFN 官方实现](https://github.com/PriorLabs/TabPFN) · [TabPFN-4 预告及候补状态](https://priorlabs.ai/technical-reports/tabpfn-4-preview)

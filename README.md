@@ -60,7 +60,7 @@ NeurIPS 2019
 
 ### 环境要求
 - 在 Streamlit Community Cloud 的 Advanced settings 选择 Python 3.12，入口为 `app.py`。Linux x86-64 使用 `requirements.txt` 中固定的 CPU 版 PyTorch。
-- 首次使用 3.5，请先在 [Prior Labs](https://ux.priorlabs.ai) 接受模型许可，再将 `TABPFN_TOKEN` 配置为部署环境变量或 Streamlit 的顶层 secret。已获授权的离线部署也可把原名权重放在 `TABPFN_MODEL_CACHE_DIR` 指定的目录。
+- 在 [Prior Labs](https://ux.priorlabs.ai) 接受模型许可后，可从 [官方 Hugging Face 仓库](https://huggingface.co/Prior-Labs/tabpfn_3_5/tree/main) 下载所选版本的权重，保留原文件名，放在 Linux 默认目录 `~/.cache/tabpfn/` 或 `TABPFN_MODEL_CACHE_DIR` 指定的目录。已缓存权重可在本地 CPU 推理。若使用 SDK 自动下载，可将 `TABPFN_TOKEN` 配置为环境变量或 Streamlit 顶层 secret。
 - 后端按文件列顺序生成。首列从经验分布抽取，后续列根据已生成的答案预测并抽样。数值列按分位数分箱，再从选中箱内抽取观察值。分类列保留选项，缺失值可被抽中。
 - CPU 默认取最多 512 行作为模型上下文，每批预测 128 行。基准结果、数据来源和复现命令见 [GSS 问卷合成实验](benchmarks/README.md)。
   
